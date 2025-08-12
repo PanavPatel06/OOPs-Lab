@@ -7,15 +7,6 @@ int main() {
     cout<<"enter student subjects grades accordingly= ";
     cin>>a>>b>>c>>d>>e;
     sum=(a+b+c+d+e)/5;
-    // Write a program to calculate and display the grade of a student based on marks in 5 subjects
-#include <iostream>
-using namespace std;
-int main() {
-    int a,b,c,d,e;
-    int sum;
-    cout<<"enter student subjects grades accordingly= ";
-    cin>>a>>b>>c>>d>>e;
-    sum=(a+b+c+d+e)/5;
     if(sum>=90)
     {
         cout<<"Your grade is A+";
@@ -40,8 +31,5 @@ int main() {
     {
         cout<<"Fail";
     }
-    return 0;
-}
-
     return 0;
 }
