@@ -1,10 +1,9 @@
-// Write a program to calculate and display the grade of a student based on marks in 5 subjects
 #include <iostream>
 using namespace std;
 int main() {
     int a,b,c,d,e;
     int sum;
-    cout<<"enter student subjects grades accordingly= ";
+    cout<<"Enter student subjects marks accordingly= ";
     cin>>a>>b>>c>>d>>e;
     sum=(a+b+c+d+e)/5;
     if(sum>=90)
