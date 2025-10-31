@@ -1,0 +1,309 @@
+Here are the C++ solutions for Experiments 5 and 7, formatted to match your writing style without extra comments.
+
+## 🧪 Experiment 5: Operator Overloading
+
+### Problem 1: Complex Class
+
+```cpp
+#include <iostream>
+
+using namespace std;
+
+class Complex {
+private:
+    double real;
+    double imag;
+public:
+    Complex(double r, double i) : real(r), imag(i) {}
+
+    Complex operator+(const Complex& other) const {
+        double newReal = real + other.real;
+        double newImag = imag + other.imag;
+        return Complex(newReal, newImag);
+    }
+
+    void displayComplex() {
+        cout << real << "+" << imag << "i";
+    }
+};
+
+int main() {
+    Complex c1(3.0, 4.0);
+    Complex c2(1.0, 2.0);
+    Complex c3 = c1 + c2;
+
+    cout << "Sum: ";
+    c3.displayComplex();
+    cout << endl;
+
+    return 0;
+}
+```
+
+-----
+
+### Problem 2: Fraction Class
+
+```cpp
+#include <iostream>
+#include <numeric>
+
+using namespace std;
+
+class Fraction {
+private:
+    int numerator;
+    int denominator;
+
+    void simplify() {
+        if (denominator == 0) return;
+        int common = std::gcd(numerator, denominator);
+        numerator /= common;
+        denominator /= common;
+        if (denominator < 0) {
+            numerator = -numerator;
+            denominator = -denominator;
+        }
+    }
+
+public:
+    Fraction(int num, int den) {
+        if (den == 0) {
+            cout << "Error: Denominator cannot be zero. Setting to 0/1." << endl;
+            numerator = 0;
+            denominator = 1;
+        } else {
+            numerator = num;
+            denominator = den;
+            simplify();
+        }
+    }
+
+    Fraction operator+(const Fraction& other) const {
+        int num = numerator * other.denominator + other.numerator * denominator;
+        int den = denominator * other.denominator;
+        return Fraction(num, den);
+    }
+
+    Fraction operator-(const Fraction& other) const {
+        int num = numerator * other.denominator - other.numerator * denominator;
+        int den = denominator * other.denominator;
+        return Fraction(num, den);
+    }
+
+    Fraction operator*(const Fraction& other) const {
+        int num = numerator * other.numerator;
+        int den = denominator * other.denominator;
+        return Fraction(num, den);
+    }
+
+    Fraction operator/(const Fraction& other) const {
+        if (other.numerator == 0) {
+            cout << "Error: Division by zero fraction. Setting to 0/1." << endl;
+            return Fraction(0, 1);
+        }
+        int num = numerator * other.denominator;
+        int den = denominator * other.numerator;
+        return Fraction(num, den);
+    }
+
+    void displayFraction() {
+        if (denominator == 1) {
+            cout << numerator;
+        } else {
+            cout << numerator << "/" << denominator;
+        }
+    }
+};
+
+int main() {
+    Fraction f1(1, 2);
+    Fraction f2(3, 4);
+    Fraction f3(2, 4);
+    Fraction f4(5, 0);
+
+    cout << "Fraction 1: "; f1.displayFraction(); cout << endl;
+    cout << "Fraction 2: "; f2.displayFraction(); cout << endl;
+    cout << "Fraction 3: "; f3.displayFraction(); cout << endl;
+    cout << "Fraction 4: "; f4.displayFraction(); cout << endl;
+
+    Fraction add = f1 + f2;
+    cout << "Addition (1/2 + 3/4): "; add.displayFraction(); cout << endl;
+
+    Fraction sub = f2 - f1;
+    cout << "Subtraction (3/4 - 1/2): "; sub.displayFraction(); cout << endl;
+
+    Fraction mul = f1 * f2;
+    cout << "Multiplication (1/2 * 3/4): "; mul.displayFraction(); cout << endl;
+
+    Fraction div = f2 / f1;
+    cout << "Division (3/4 / 1/2): "; div.displayFraction(); cout << endl;
+
+    return 0;
+}
+```
+
+-----
+
+## 🔬 Experiment 7: Polymorphism and Virtual Functions
+
+### Problem 1: Shape Class Hierarchy
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <iomanip>
+
+using namespace std;
+
+class Shape {
+public:
+    virtual void displayInfo() const {
+        cout << "This is a shape." << endl;
+    }
+    virtual double calculateArea() const = 0;
+    virtual ~Shape() {}
+};
+
+class Circle : public Shape {
+private:
+    double radius;
+public:
+    Circle(double r) : radius(r) {}
+    void displayInfo() const override {
+        cout << "This is a circle with radius " << radius << "." << endl;
+    }
+    double calculateArea() const override {
+        return M_PI * radius * radius;
+    }
+};
+
+class Rectangle : public Shape {
+private:
+    double length;
+    double width;
+public:
+    Rectangle(double l, double w) : length(l), width(w) {}
+    void displayInfo() const override {
+        cout << "This is a rectangle with length " << length << " and width " << width << "." << endl;
+    }
+    double calculateArea() const override {
+        return length * width;
+    }
+};
+
+int main() {
+    cout << fixed << setprecision(2);
+
+    Circle* circle1 = new Circle(5.0);
+    Rectangle* rect1 = new Rectangle(10.0, 4.0);
+
+    vector<Shape*> shapes;
+    shapes.push_back(circle1);
+    shapes.push_back(rect1);
+
+    for (Shape* shape : shapes) {
+        shape->displayInfo();
+        cout << "Area: " << shape->calculateArea() << endl;
+    }
+
+    for (Shape* shape : shapes) {
+        delete shape;
+    }
+
+    return 0;
+}
+```
+
+-----
+
+### Problem 2: Smart Devices and Virtual Destructors
+
+```cpp
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+class SmartDevice {
+protected:
+    string deviceId;
+public:
+    SmartDevice(string id) : deviceId(id) {
+        cout << "SmartDevice constructor called: " << deviceId << endl;
+    }
+    virtual void connect() = 0;
+    virtual void displayStatus() const = 0;
+    virtual ~SmartDevice() {
+        cout << "SmartDevice destructor called for " << deviceId << "." << endl;
+    }
+};
+
+class SmartLight : public SmartDevice {
+private:
+    bool isOn;
+    string* colorMode;
+public:
+    SmartLight(string id, bool on, string mode)
+        : SmartDevice(id), isOn(on) {
+        colorMode = new string(mode);
+        cout << "SmartLight constructor called." << endl;
+    }
+    ~SmartLight() {
+        cout << "SmartLight destructor called for " << deviceId << ". Deallocating colorMode." << endl;
+        delete colorMode;
+    }
+    void connect() override {
+        cout << "Smart Light " << deviceId << " connecting..." << endl;
+    }
+    void displayStatus() const override {
+        cout << "Smart Light " << deviceId << " is " << (isOn ? "ON" : "OFF")
+             << ". Color Mode: " << *colorMode << "." << endl;
+    }
+};
+
+class SmartSpeaker : public SmartDevice {
+private:
+    int volume;
+    string currentSong;
+public:
+    SmartSpeaker(string id, int vol, string song)
+        : SmartDevice(id), volume(vol), currentSong(song) {
+        cout << "SmartSpeaker constructor called." << endl;
+    }
+    ~SmartSpeaker() {
+        cout << "SmartSpeaker destructor called for " << deviceId << "." << endl;
+    }
+    void connect() override {
+        cout << "Smart Speaker " << deviceId << " connecting..." << endl;
+    }
+    void displayStatus() const override {
+        cout << "Smart Speaker " << deviceId << " is at volume " << volume
+             << ", playing: " << currentSong << "." << endl;
+    }
+};
+
+int main() {
+    SmartLight* light1 = new SmartLight("Light001", true, "Warm White");
+    SmartSpeaker* speaker1 = new SmartSpeaker("Speaker001", 75, "Bohemian Rhapsody");
+
+    vector<SmartDevice*> devices;
+    devices.push_back(light1);
+    devices.push_back(speaker1);
+
+    cout << "-- Connecting and Displaying Status --" << endl;
+    for (SmartDevice* device : devices) {
+        device->connect();
+        device->displayStatus();
+    }
+
+    cout << "-- Deleting Devices --" << endl;
+    for (SmartDevice* device : devices) {
+        delete device;
+    }
+
+    return 0;
+}
+```
